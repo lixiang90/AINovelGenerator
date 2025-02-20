@@ -5,7 +5,7 @@ from core_stream import AgentWriter
 def start():
     """Initialize configuration file."""
     parser = argparse.ArgumentParser("读取配置文件，载入应用")
-    parser.add_argument("-c","--config",type=str,default="configs/deepseek_r1_aliyun.yaml",help="配置文件路径")
+    parser.add_argument("-c","--config",type=str,default="configs/deepseek-r1.yaml",help="配置文件路径")
     args = parser.parse_args()
     return args.config
 
