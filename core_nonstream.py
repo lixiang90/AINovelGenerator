@@ -46,7 +46,7 @@ def split_plan(text):
     return plan_list
 
 class AgentWriter:
-    def __init__(self, config="configs/deepseek_r1_aliyun.yaml"):
+    def __init__(self, config="configs/deepseek-r1.yaml"):
         try:
             with open(config,"r",encoding="utf-8") as f:
                 self.config = yaml.safe_load(f)
@@ -229,4 +229,3 @@ if __name__ == "__main__":
     writer = AgentWriter()
     introduction = "写一篇10000字左右的名侦探柯南同人小说，讲述主角团来到一座神秘古堡之后，发生了凶杀案，柯南和灰原哀联手查清案件，发现其与二十年前的旧案有关联，并且两人在查案过程中遇到危险，发生感情羁绊的故事。"
     writer.plan_and_write(introduction)
-    # writer.continue_from_stop(1739986794640104)
