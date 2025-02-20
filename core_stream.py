@@ -158,7 +158,7 @@ class StreamProcessorForWriting:
 
 
 class AgentWriter:
-    def __init__(self, config="configs/deepseek_r1_aliyun.yaml"):
+    def __init__(self, config="configs/deepseek-r1.yaml"):
         try:
             with open(config,"r",encoding="utf-8") as f:
                 self.config = yaml.safe_load(f)
@@ -321,14 +321,3 @@ class AgentWriter:
             self.curr_chapter += 1
             with open(os.path.join(self.work_folder,'stop.txt'),'w',encoding='utf-8') as f:
                 f.write(str(self.curr_chapter))
-            
-if __name__ == "__main__":
-    agent = AgentWriter()
-    instruction="写一篇8000字左右的校园恋爱喜剧故事。"
-    agent.set_instruction(instruction)
-    respond = agent.make_plan()
-    for s,t,c in respond:
-        print(s)
-        print(t)
-        print(c)
-    print('finish')
