@@ -25,12 +25,14 @@ def stream_planning(instruction):
                 yield gr.update(value=think), gr.update(), gr.update(), gr.update()
             elif status == 'output':
                 table_data = [[ch['段落'],ch['要点描述'],ch['字数要求']] for ch in chapter]
-                yield gr.update(), gr.update(value=table_data), gr.update(), gr.update()
+                yield gr.update(value=think), gr.update(value=table_data), gr.update(), gr.update()
 
 def stream_writing(think_data, table_data, text_data):
     assert agent.status == 'writing', '尚未生成大纲!'
     agent.plan_list = [f"第 {item[0]} 段 - 要点：{item[1]} - 字数：{item[2]}" for item in table_data.values]
     agent.plan_text = '\n'.join(agent.plan_list)
+    if not think_data:
+        think_data = ""
     original_think = think_data + '<br>'
     if agent.curr_chapter > 0:
         original_text = text_data + '\n\n'
@@ -53,9 +55,14 @@ def stream_writing(think_data, table_data, text_data):
 def stream_writing_all(think_data, table_data, text_data):
     assert agent.status == 'writing', '尚未生成大纲!'
     agent.plan_list = [f"第 {item[0]} 段 - 要点：{item[1]} - 字数：{item[2]}" for item in table_data.values]
+    agent.N_chapters = len(agent.plan_list)
     agent.plan_text = '\n'.join(agent.plan_list)
+    if not think_data:
+        think_data = ""
+    if not text_data:
+        text_data = ""
     original_think = think_data + '<br>'
-    original_text = text_data + '\n\n'
+    original_text = text_data
     for _ in range(agent.curr_chapter,agent.N_chapters):
         writer = agent.write()
         if writer == -1:
