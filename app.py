@@ -81,7 +81,7 @@ def stream_writing_all(think_data, table_data, text_data):
                     yield gr.update(), gr.update(value=original_text+text), gr.update()
         yield gr.update(), gr.update(), gr.update(value = f"生成段落(第{agent.curr_chapter+1}段)")
         original_think += curr_think + '<br>'
-        original_text += curr_text + '\n\n'
+        original_text += curr_text
             
 
 config = start()
