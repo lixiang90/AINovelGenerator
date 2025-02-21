@@ -5,7 +5,6 @@ import os
 from openai import OpenAI
 import yaml
 import jsonlines
-from typing import Generator
 
 def stream(messages, model_args, max_retries=10, pause=20):
     i = 0
@@ -18,7 +17,7 @@ def stream(messages, model_args, max_retries=10, pause=20):
                 stream=True
             )
             for chunk in response:        
-                if chunk.choices[0].delta.reasoning_content:
+                if hasattr(chunk.choices[0].delta, "reasoning_content") and chunk.choices[0].delta.reasoning_content:
                     reasoning_content = chunk.choices[0].delta.reasoning_content
                     yield {'think': reasoning_content}
                 else:
