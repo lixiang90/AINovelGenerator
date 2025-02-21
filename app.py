@@ -63,25 +63,36 @@ def stream_writing_all(think_data, table_data, text_data):
         text_data = ""
     original_think = think_data + '<br>'
     original_text = text_data
-    for _ in range(agent.curr_chapter,agent.N_chapters):
-        writer = agent.write()
-        if writer == -1:
-            return gr.update(), gr.update()
-        if agent.model_args["reasoning"] == 2:
-            for state, think, text in writer:
-                curr_think, curr_text = think, text
-                yield gr.update(value=original_think+think), gr.update(value=original_text+text), gr.update()
-        else:
-            for state, text in writer:
-                if state == "think":
-                    curr_think = text
-                    yield gr.update(value=original_think+text), gr.update(), gr.update()
-                elif state == "output":
-                    curr_text = text
-                    yield gr.update(), gr.update(value=original_text+text), gr.update()
-        yield gr.update(), gr.update(), gr.update(value = f"生成段落(第{agent.curr_chapter+1}段)")
-        original_think += curr_think + '<br>'
-        original_text += curr_text + '\n\n'
+    if agent.curr_chapter >= agent.N_chapters:
+        return gr.update(), gr.update(), gr.update()
+    else:
+        for _ in range(agent.curr_chapter,agent.N_chapters):
+            writer = agent.write()
+            if writer == -1:
+                return gr.update(), gr.update(), gr.update()
+            if agent.model_args["reasoning"] == 2:
+                curr_think, curr_text = "", ""
+                for state, think, text in writer:
+                    if not think:
+                        think = ""
+                    if not text:
+                        text = ""
+                    curr_think, curr_text = think, text
+                    yield gr.update(value=original_think+think), gr.update(value=original_text+text), gr.update()
+            else:
+                curr_think, curr_text = "", ""
+                for state, text in writer:
+                    if not text:
+                        text = ""
+                    if state == "think":
+                        curr_think = text
+                        yield gr.update(value=original_think+text), gr.update(), gr.update()
+                    elif state == "output":
+                        curr_text = text
+                        yield gr.update(), gr.update(value=original_text+text), gr.update()
+            yield gr.update(), gr.update(), gr.update(value = f"生成段落(第{agent.curr_chapter+1}段)")
+            original_think += curr_think + '<br>'
+            original_text += curr_text + "\n\n"
             
 
 config = start()
