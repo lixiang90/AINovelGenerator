@@ -138,7 +138,7 @@ class AgentWriter:
             self.written = ""
             self.prompt_write = self.template_write.replace("$PLAN$",self.plan_text)
             with open(os.path.join(self.work_folder,'stop.txt'),'w',encoding='utf-8') as f:
-                f.write(0)
+                f.write("0")
             return 0
     
     def write(self):
