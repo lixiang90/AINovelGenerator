@@ -19,9 +19,13 @@ def stream(messages, model_args, max_retries=10, pause=20):
             for chunk in response:        
                 if hasattr(chunk.choices[0].delta, "reasoning_content") and chunk.choices[0].delta.reasoning_content:
                     reasoning_content = chunk.choices[0].delta.reasoning_content
+                    if not reasoning_content:
+                        reasoning_content = ""
                     yield {'think': reasoning_content}
                 else:
                     content = chunk.choices[0].delta.content
+                    if not content:
+                        content = ""
                     yield {'output': content}
             break
         except Exception as e:
@@ -106,7 +110,7 @@ class StreamProcessorForPlanning:
                 elif self.status == 'think':
                     if '<think>' in self.buffer:
                         thought_process = re.findall(r'<think>(.*?)</think>', self.buffer, re.DOTALL)
-                        if not thought_process:
+                        if len(thought_process) == 0:
                             self.think = re.search(r"<think>(.*)", self.buffer).group(1)
                         else:
                             self.status = 'output'
@@ -147,7 +151,7 @@ class StreamProcessorForWriting:
                     self.buffer += chunk['output']
                     if '<think>' in self.buffer:
                         thought_process = re.findall(r'<think>(.*?)</think>', self.buffer, re.DOTALL)
-                        if not thought_process:
+                        if len(thought_process) == 0:
                             self.think = re.search(r"<think>(.*)", self.buffer).group(1)
                         else:
                             self.status = 'output'
