@@ -67,7 +67,7 @@ def stream_writing_all(think_data, table_data, text_data):
     else:
         original_text = text_data
     if agent.curr_chapter >= agent.N_chapters:
-        return gr.update(), gr.update(), gr.update(value = f"生成段落(第{agent.curr_chapter+1}段)")
+        yield gr.update(), gr.update(), gr.update()
     else:
         for _ in range(agent.curr_chapter,agent.N_chapters):
             writer = agent.write()
