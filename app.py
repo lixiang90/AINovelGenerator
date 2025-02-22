@@ -72,7 +72,8 @@ def stream_writing_all(think_data, table_data, text_data):
         for _ in range(agent.curr_chapter,agent.N_chapters):
             writer = agent.write()
             if writer == -1:
-                return gr.update(), gr.update(), gr.update()
+                yield gr.update(), gr.update(), gr.update()
+                break
             if agent.model_args["reasoning"] == 2:
                 curr_think, curr_text = "", ""
                 for state, think, text in writer:
