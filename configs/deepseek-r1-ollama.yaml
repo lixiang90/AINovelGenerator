@@ -1,0 +1,17 @@
+prompt_template:
+    template_plan: "prompts/plan.txt"
+    template_write: "prompts/write.txt"
+word_requirement:
+    min_word: 500
+    sample_1: 800
+    sample_2: 2000
+    max_word: 3000
+model_args:
+    base_url: "http://localhost:11434/v1/"
+    api_key: "ollama"
+    model: "deepseek-r1"
+    reasoning: 2
+retry:
+    max_retries: 10
+    pause: 20
+save_path: "generated_texts"
