@@ -5,6 +5,14 @@ import os
 from openai import OpenAI
 import yaml
 import jsonlines
+import itertools
+
+def check_empty_peek_first(generator):
+    try:
+        first = next(generator)
+        return False, first
+    except StopIteration:
+        return True, None
 
 def stream(messages, model_args, max_retries=10, pause=20):
     i = 0
@@ -16,7 +24,12 @@ def stream(messages, model_args, max_retries=10, pause=20):
                 messages=messages,
                 stream=True
             )
-            for chunk in response:        
+            is_empty, first_chunk = check_empty_peek_first(response)
+            if is_empty:
+                raise ValueError("response is empty.")
+            else:
+                response = itertools.chain([first_chunk],response)
+            for chunk in response:  
                 if hasattr(chunk.choices[0].delta, "reasoning_content") and chunk.choices[0].delta.reasoning_content:
                     reasoning_content = chunk.choices[0].delta.reasoning_content
                     if not reasoning_content:
