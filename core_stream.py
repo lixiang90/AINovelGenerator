@@ -294,7 +294,7 @@ class AgentWriter:
             return -1
         else:
             print(f"正在写作第{self.curr_chapter+1}段:\n{self.plan_list[self.curr_chapter]}")
-            curr_write_prompt = self.template_write.replace("$PLAN$",self.plan_text).replace("$TEXT$",self.written).replace("$STEP$",self.plan_list[self.curr_chapter])
+            curr_write_prompt = self.prompt_write.replace("$PLAN$",self.plan_text).replace("$TEXT$",self.written).replace("$STEP$",self.plan_list[self.curr_chapter])
             messages = [{"role":"user","content":curr_write_prompt}]
             try:
                 result = stream(messages, self.model_args, self.max_retries, self.pause)
